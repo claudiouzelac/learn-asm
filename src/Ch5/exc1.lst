@@ -1,0 +1,22 @@
+     1                                 %line 1+1 exc1.s
+     2                                 [section .data]
+     3 00000000 0110000000000000       pa dq 4097
+     4 00000008 5000000000000000       pb dq 0x50
+     5 00000010 F6FFFFFFFFFFFFFF       na dq -10
+     6 00000018 51FFFFFFFFFFFFFF       nb dq -175
+     7                                 
+     8                                 [segment .text]
+     9                                 [global _start]
+    10                                 _start:
+    11 00000000 488B0425[00000000]      mov rax, [pa]
+    12 00000008 488B1C25[00000000]      mov rbx, [pb]
+    13 00000010 488B0C25[00000000]      mov rcx, [na]
+    14 00000018 488B1425[00000000]      mov rdx, [nb]
+    15 00000020 4801D8                  add rax, rbx
+    16 00000023 4801C8                  add rax, rcx
+    17 00000026 4801D0                  add rax, rdx
+    18                                 
+    19                                 exit:
+    20 00000029 48C7C03C000000          mov rax, 60
+    21 00000030 4831FF                  xor rdi, rdi
+    22 00000033 0F05                    syscall
