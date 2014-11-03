@@ -1,0 +1,8 @@
+     1                                 %line 1+1 exc1.s
+     2                                 [section .data]
+     3 00000000 0000000000000000<rept>       a times 10 dq 0
+     4 00000050 48656C6C6F20776F72-    c db "Hello world", 0
+     5 00000050 6C6400             
+     6                                 
+     7                                 [section .bss]
+     8 00000000 <gap>                  b resw 5
