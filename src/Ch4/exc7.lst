@@ -1,0 +1,39 @@
+     1                                 %line 1+1 exc7.s
+     2                                 [section .data]
+     3 00000000 6400000000000000       kwh dq 100
+     4 00000008 0100000000000000       cost dq 1
+     5                                 
+     6                                 [section .text]
+     7                                 
+     8                                 
+     9                                 
+    10                                 
+    11                                 
+    12                                 
+    13                                 [global _start]
+    14                                 _start:
+    15 00000000 48C7C3F4010000          mov rbx, 500
+    16 00000007 488B0425[00000000]      mov rax, [kwh]
+    17 0000000F 488B0C25[00000000]      mov rcx, [cost]
+    18 00000017 48F7E1                  mul rcx
+    19 0000001A 4801D8                  add rax, rbx
+    20 0000001D 488B1C25[00000000]      mov rbx, [kwh]
+    21 00000025 4881EBE8030000          sub rbx, 1000
+    22 0000002C 4883FB00                cmp rbx, 0
+    23 00000030 7C01                    jl skipmult
+    24 00000032 48F7E3                  mul rbx
+    25                                 
+    26                                 skipmult:
+    27                                 
+    28 00000035 48C7C200000000          mov rdx, 0
+    29 0000003C 48C7C164000000          mov rcx, 100
+    30 00000043 48F7F1                  div rcx
+    31                                 
+    32 00000046 50                      push rax
+    33 00000047 52                      push rdx
+    34                                 
+    35                                 
+    36 00000048 48C7C03C000000          mov rax, 60
+    37 0000004F 4831FF                  xor rdi, rdi
+    38 00000052 0F05                    syscall
+    39                                  exit
