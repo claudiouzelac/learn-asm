@@ -1,0 +1,11 @@
+#! /bin/bash
+
+if [ -z "$1" ];
+then
+    name="ops"
+else
+    name=$(echo $1 | sed 's/\..*//')
+fi
+
+pdflatex -interaction=nonstopmode $name.tex
+rm $name.log $name.aux

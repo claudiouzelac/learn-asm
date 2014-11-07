@@ -1,0 +1,150 @@
+\documentclass{article}
+\usepackage{amsmath}
+\setlength{\parindent}{0pt}
+\begin{document}
+
+\section*{Opcodes}
+
+x means source register number, DD means look at the source register codes. n
+means constant number (B for 8-bit, W for 16-bit, D for 32-bit, Q for 64-bit).
+
+For arguments to ops, R means destination register, S means source register, K
+means constant, P means memory address.
+
+\subsection*{mov}
+
+$\texttt{mov R S} \Rightarrow \texttt{48 89 DD}$
+
+$\texttt{mov R K} \Rightarrow \texttt{48 C7 Cx nQ}$
+
+
+\subsection*{arithmetic}
+
+\subsubsection*{add}
+
+$\texttt{add R S} \Rightarrow \texttt{48 01 DD}$
+
+$\texttt{add R (K < 127)} \Rightarrow \texttt{48 83 Cx nB}$
+
+$\texttt{add rax K} \Rightarrow \texttt{48 05 nQ}$
+
+$\texttt{add R K} \Rightarrow \texttt{48 81 Cx nQ}$
+
+
+\subsubsection*{sub}
+
+$\texttt{sub R S} \Rightarrow \texttt{48 29 DD}$
+
+$\texttt{sub R (K < 127)} \Rightarrow \texttt{48 83 C(x+8) nB}$
+
+$\texttt{sub rax K} \Rightarrow \texttt{48 2D nQ}$
+
+$\texttt{sub R K} \Rightarrow \texttt{48 81 E(x+8) nQ}$
+
+
+\subsubsection*{mul}
+
+$\texttt{mul R} \Rightarrow \texttt{48 F7 Ex}$
+
+$\texttt{mul P} \Rightarrow \texttt{48 F7 24 25 *}$
+
+
+\subsubsection*{imul}
+
+$\texttt{imul R} \Rightarrow \texttt{48 F7 E(x+8)}$
+
+$\texttt{imul P} \Rightarrow \texttt{48 F7 2C 25 *}$
+
+$\texttt{imul R S} \Rightarrow \texttt{48 0F AF DD}$
+
+
+\subsubsection*{div}
+
+$\texttt{div R} \Rightarrow \texttt{48 F7 Fx}$
+
+$\texttt{div P} \Rightarrow \texttt{48 F7 34 25 *}$
+
+
+\subsubsection*{idiv}
+
+$\texttt{idiv R} \Rightarrow \texttt{48 F7 F(x+8)}$
+
+$\texttt{idiv P} \Rightarrow \texttt{48 F7 3C 25 *}$
+
+
+\subsection*{shift}
+
+$\texttt{shr[1] R} \Rightarrow \texttt{48 D1 E(x+8)}$
+
+$\texttt{shr[n] R K} \Rightarrow \texttt{48 C1 E(x+8) nB}$
+
+$\texttt{sar[1] R} \Rightarrow \texttt{48 D1 F(x+8)}$
+
+$\texttt{sar[n] R K} \Rightarrow \texttt{48 C1 F(x+8) nB}$
+
+$\texttt{shl[1] R} \Rightarrow \texttt{48 D1 Ex}$
+
+$\texttt{shl[n] R K} \Rightarrow \texttt{48 C1 Ex nB}$
+
+
+\subsection*{rotate}
+
+$\texttt{ror[1] R} \Rightarrow \texttt{48 D1 C(x+8)}$
+
+$\texttt{ror[n] R K} \Rightarrow \texttt{48 C1 C(x+8) nB}$
+
+$\texttt{rol[1] R} \Rightarrow \texttt{48 D1 Cx}$
+
+$\texttt{rol[n] R K} \Rightarrow \texttt{48 C1 Cx nB}$
+
+
+\subsection*{bitwise logic}
+
+$\texttt{not R} \Rightarrow \texttt{48 F7 Dx}$
+
+$\texttt{or R S} \Rightarrow \texttt{48 09 ...}$
+
+$\texttt{xor R S} \Rightarrow \texttt{48 31 ...}$
+
+$\texttt{and R S} \Rightarrow \texttt{48 21 ...}$
+
+
+\subsection*{miscellaneous}
+
+$\texttt{nop} \Rightarrow \texttt{90}$
+
+
+\section*{Destination Registers}
+\begin{minipage}{\textwidth}
+
+$\texttt{rax} \Rightarrow \texttt{0}$
+
+$\texttt{rbx} \Rightarrow \texttt{3}$
+
+$\texttt{rcx} \Rightarrow \texttt{1}$
+
+$\texttt{rdx} \Rightarrow \texttt{2}$
+
+$\texttt{rdi} \Rightarrow \texttt{7}$
+\end{minipage}
+
+
+\section*{Source Registers}
+\begin{minipage}{\textwidth}
+
+x means source register number
+
+$\texttt{R rax} \Rightarrow \texttt{Cx}$
+
+$\texttt{R rbx} \Rightarrow \texttt{D(x+8)}$
+
+$\texttt{R rcx} \Rightarrow \texttt{C(x+8)}$
+
+$\texttt{R rdx} \Rightarrow \texttt{Dx}$
+
+$\texttt{R rdi} \Rightarrow \texttt{F(x+8)}$
+
+\end{minipage}
+
+
+\end{document}

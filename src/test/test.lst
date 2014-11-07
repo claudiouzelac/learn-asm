@@ -1,0 +1,9 @@
+     1                                 %line 1+1 test.s
+     2                                 [section .data]
+     3 00000000 0A00000000000000       a dq 10
+     4                                 
+     5                                 [section .text]
+     6                                 [global _start]
+     7                                 _start:
+     8 00000000 48F7F8                  idiv rax, rax
+     9 00000003 48F7FB                  idiv rax, rbx

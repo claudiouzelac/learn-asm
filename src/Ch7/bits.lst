@@ -1,0 +1,19 @@
+     1                                 %line 1+1 bits.s
+     2                                 [segment .text]
+     3                                 [global _start]
+     4                                 _start:
+     5 00000000 48C7C078563412          mov rax, 0x12345678
+     6 00000007 48C1E808                shr rax, 8
+     7 0000000B 4825FF000000            and rax, 0xff
+     8 00000011 90                      nop
+     9 00000012 48C7C078563412          mov rax, 0x12345678
+    10 00000019 48C7C2AA000000          mov rdx, 0xaa
+    11 00000020 48C7C3FF000000          mov rbx, 0xff
+    12 00000027 48C1E308                shl rbx, 8
+    13 0000002B 48F7D3                  not rbx
+    14 0000002E 4821D8                  and rax, rbx
+    15 00000031 48C1E208                shl rdx, 8
+    16 00000035 4809D0                  or rax, rdx
+    17 00000038 48C7C03C000000          mov rax, 60
+    18 0000003F 4831FF                  xor rdi, rdi
+    19 00000042 0F05                    syscall

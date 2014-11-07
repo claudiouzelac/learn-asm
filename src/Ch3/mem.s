@@ -12,8 +12,8 @@ h resd 10
 i resb 100
 
 segment .text
-global main
-main:
+global _start
+_start:
     push rbp  ; set up stack frame
     mov rbp, rsp ; rbp points to the stack frame
     sub rsp, 16  ; room for local variables
