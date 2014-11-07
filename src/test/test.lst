@@ -6,7 +6,8 @@
      6                                 [section .text]
      7                                 [global _start]
      8                                 _start:
-     9 00000000 48C70425[00000000]-     mov qword [a], 1
-    10 00000000 01000000           
-    11 0000000C 48C7C001000000          mov rax, 1
-    12 00000013 48C7C301000000          mov rbx, 1
+     9 00000000 480F44C0                cmovz rax, rax
+    10 00000004 480F48C0                cmovs rax, rax
+    11                                 
+    12 00000008 480F44DB                cmovz rbx, rbx
+    13 0000000C 480F48DB                cmovs rbx, rbx

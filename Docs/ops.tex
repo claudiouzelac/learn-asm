@@ -5,264 +5,453 @@
 
 \section*{Info}
 
-x means destination register, SR means source register in a register--register
-operand, PR means register in a register--pointer operand. n means constant
-number (nB for 8-bit, nW for 16-bit, nD for 32-bit, nQ for 64-bit). * means
-pointer.
+x means destination register, sr means source register in a register--register
+operand, pr means register in a register--pointer operand. n means constant
+number, nb means constant byte number. * means pointer.
 
-For arguments, R means register, K
-means constant, P means memory address.
+For arguments, R means register, Rax means any ax register (ax, eax, rax),
+K means a constant of any size, KB means a constant where $0 \leq K \leq 127$,
+P means memory address.
 
 \section*{Destination Registers (x)}
 \begin{minipage}{\textwidth}
 
-$\texttt{rax} \Rightarrow \texttt{0}$
+$\texttt{ax} \rightarrow \texttt{0}$
 
-$\texttt{rbx} \Rightarrow \texttt{3}$
+$\texttt{bx} \rightarrow \texttt{3}$
 
-$\texttt{rcx} \Rightarrow \texttt{1}$
+$\texttt{cx} \rightarrow \texttt{1}$
 
-$\texttt{rdx} \Rightarrow \texttt{2}$
+$\texttt{dx} \rightarrow \texttt{2}$
 
-$\texttt{rdi} \Rightarrow \texttt{7}$
+$\texttt{di} \rightarrow \texttt{7}$
 
 \end{minipage}
 
 
-\section*{Source Registers (SR)}
+\section*{Source Registers (sr)}
 \begin{minipage}{\textwidth}
 
-$\texttt{R rax} \Rightarrow \texttt{Cx}$
+$\texttt{ax} \rightarrow \texttt{Cx}$
 
-$\texttt{R rbx} \Rightarrow \texttt{D(x+8)}$
+$\texttt{bx} \rightarrow \texttt{D(x+8)}$
 
-$\texttt{R rcx} \Rightarrow \texttt{C(x+8)}$
+$\texttt{cx} \rightarrow \texttt{C(x+8)}$
 
-$\texttt{R rdx} \Rightarrow \texttt{Dx}$
+$\texttt{dx} \rightarrow \texttt{Dx}$
 
-$\texttt{R rdi} \Rightarrow \texttt{F(x+8)}$
+$\texttt{di} \rightarrow \texttt{F(x+8)}$
 
 \end{minipage}
 
 
-\section*{Register in a Register--Pointer Op (PR)}
+\section*{Register in a Register--Pointer Op (pr)}
 \begin{minipage}{\textwidth}
 
-$\texttt{rax} \rightarrow \texttt{04}$
+$\texttt{ax} \rightarrow \texttt{04}$
 
-$\texttt{rbx} \rightarrow \texttt{1C}$
+$\texttt{bx} \rightarrow \texttt{1C}$
 
-$\texttt{rcx} \rightarrow \texttt{0C}$
+$\texttt{cx} \rightarrow \texttt{0C}$
 
-$\texttt{rdx} \rightarrow \texttt{14}$
+$\texttt{dx} \rightarrow \texttt{14}$
 
-$\texttt{rdi} \rightarrow \texttt{3C}$
+$\texttt{di} \rightarrow \texttt{3C}$
 
 \end{minipage}
 
+
+\section*{Size}
+\begin{minipage}{\textwidth}
+
+Goes before every opcode.
+
+$\texttt{word} \rightarrow \texttt{66}$
+
+$\texttt{dword} \rightarrow \texttt{[none]}$
+
+$\texttt{qword} \rightarrow \texttt{48}$
+
+\end{minipage}
 
 
 \section{mov}
 
-\subsection{register}
+\subsection{mov}
 
-$\texttt{mov R K} \Rightarrow \texttt{48 C7 Cx nQ}$
+\begin{minipage}{\textwidth}
 
-$\texttt{mov R R} \Rightarrow \texttt{48 89 SR}$
+\subsubsection{register}
 
-$\texttt{mov R P} \Rightarrow \texttt{48 8B PR 25 *}$
+$\texttt{mov R R} \Rightarrow \texttt{89 sr}$
+
+$\texttt{mov R K} \Rightarrow \texttt{C7 Cx n}$
+
+$\texttt{mov R P} \Rightarrow \texttt{8B pr 25 *}$
 
 
-\subsection{pointer}
+\subsubsection{pointer}
 
-$\texttt{mov P R} \Rightarrow \texttt{48 89 PR 25 *}$
+$\texttt{mov P R} \Rightarrow \texttt{89 pr 25 *}$
 
-$\texttt{mov P K} \Rightarrow \texttt{48 C7 04 25 * nQ}$
+$\texttt{mov P K} \Rightarrow \texttt{C7 04 25 * n}$
+
+\end{minipage}
+
+
+\subsection{movsx}
+
+\begin{minipage}{\textwidth}
+
+$\texttt{movsx R byte P} \Rightarrow \texttt{0F BE pr 25 *}$
+
+$\texttt{movsx R word P} \Rightarrow \texttt{0F BF pr 25 *}$
+
+$\texttt{movsxd R P} \Rightarrow \texttt{63 pr 25 *}$
+
+\end{minipage}
+
+
+\subsection{movzx}
+
+\begin{minipage}{\textwidth}
+
+$\texttt{movzx R byte P} \Rightarrow \texttt{0F B6 pr 25 *}$
+
+$\texttt{movzx R word P} \Rightarrow \texttt{0F B7 pr 25 *}$
+
+\end{minipage}
+
+
+\subsection{cmov}
+
+\begin{minipage}{\textwidth}
+
+$\texttt{cmovz R R} \Rightarrow \texttt{0F 44 sr}$
+
+$\texttt{cmovs R R} \Rightarrow \texttt{0F 48 sr}$
+
+\end{minipage}
+
 
 
 \section{arithmetic}
 
 \subsection{add}
+\begin{minipage}{\textwidth}
 
 \subsubsection{register}
 
-$\texttt{add R R} \Rightarrow \texttt{48 01 SR}$
+$\texttt{add R R} \Rightarrow \texttt{01 sr}$
 
-$\texttt{add R (K<0x80)} \Rightarrow \texttt{48 83 Cx nB}$
+$\texttt{add R KB} \Rightarrow \texttt{83 Cx nb}$
 
-$\texttt{add rax K} \Rightarrow \texttt{48 05 nQ}$
+$\texttt{add Rax K} \Rightarrow \texttt{05 n}$
 
-$\texttt{add R K} \Rightarrow \texttt{48 81 Cx nQ}$
+$\texttt{add R K} \Rightarrow \texttt{81 Cx n}$
 
-$\texttt{add R P} \Rightarrow \texttt{48 01 PR 25 *}$
+$\texttt{add R P} \Rightarrow \texttt{01 pr 25 *}$
 
 
 \subsubsection{pointer}
 
-$\texttt{add P R} \Rightarrow \texttt{48 03 PR 25 *}$
+$\texttt{add P R} \Rightarrow \texttt{03 pr 25 *}$
+
+$\texttt{add P KB} \Rightarrow \texttt{83 04 25 * nb}$
+
+$\texttt{add P K} \Rightarrow \texttt{81 04 25 * n}$
+
+\end{minipage}
 
 
 \subsection{sub}
+\begin{minipage}{\textwidth}
 
-$\texttt{sub R S} \Rightarrow \texttt{48 29 SR}$
+\subsubsection{register}
 
-$\texttt{sub R (K < 127)} \Rightarrow \texttt{48 83 C(x+8) nB}$
+$\texttt{sub R S} \Rightarrow \texttt{29 sr}$
 
-$\texttt{sub rax K} \Rightarrow \texttt{48 2D nQ}$
+$\texttt{sub R KB} \Rightarrow \texttt{83 C(x+8) nb}$
 
-$\texttt{sub R K} \Rightarrow \texttt{48 81 E(x+8) nQ}$
+$\texttt{sub rax K} \Rightarrow \texttt{2D n}$
 
-$\texttt{sub R P} \Rightarrow \texttt{48 29 PR 25 *}$
+$\texttt{sub R K} \Rightarrow \texttt{81 E(x+8) n}$
+
+$\texttt{sub R P} \Rightarrow \texttt{29 pr 25 *}$
 
 
 \subsubsection{pointer}
 
-$\texttt{sub P R} \Rightarrow \texttt{48 2B PR 25 *}$
+$\texttt{sub P R} \Rightarrow \texttt{2B pr 25 *}$
+
+$\texttt{sub P KB} \Rightarrow \texttt{83 2C 25 * nb}$
+
+$\texttt{sub P K} \Rightarrow \texttt{81 2C 25 * nb}$
+
+\end{minipage}
 
 
 \subsection{mul}
+\begin{minipage}{\textwidth}
 
-$\texttt{mul R} \Rightarrow \texttt{48 F7 Ex}$
+$\texttt{mul R} \Rightarrow \texttt{F7 Ex}$
 
-$\texttt{mul P} \Rightarrow \texttt{48 F7 24 25 *}$
+$\texttt{mul P} \Rightarrow \texttt{F7 24 25 *}$
+
+\end{minipage}
 
 
 \subsection{imul}
+\begin{minipage}{\textwidth}
 
-$\texttt{imul R} \Rightarrow \texttt{48 F7 E(x+8)}$
+$\texttt{imul R} \Rightarrow \texttt{F7 E(x+8)}$
 
-$\texttt{imul P} \Rightarrow \texttt{48 F7 2C 25 *}$
+$\texttt{imul P} \Rightarrow \texttt{F7 2C 25 *}$
 
-$\texttt{imul R R} \Rightarrow \texttt{48 0F AF SR}$
+$\texttt{imul R R} \Rightarrow \texttt{0F AF sr}$
+
+\end{minipage}
 
 
 \subsection{div}
+\begin{minipage}{\textwidth}
 
-$\texttt{div R} \Rightarrow \texttt{48 F7 Fx}$
+$\texttt{div R} \Rightarrow \texttt{F7 Fx}$
 
-$\texttt{div P} \Rightarrow \texttt{48 F7 34 25 *}$
+$\texttt{div P} \Rightarrow \texttt{F7 34 25 *}$
+
+\end{minipage}
 
 
 \subsection{idiv}
+\begin{minipage}{\textwidth}
 
-$\texttt{idiv R} \Rightarrow \texttt{48 F7 F(x+8)}$
+$\texttt{idiv R} \Rightarrow \texttt{F7 F(x+8)}$
 
-$\texttt{idiv P} \Rightarrow \texttt{48 F7 3C 25 *}$
+$\texttt{idiv P} \Rightarrow \texttt{F7 3C 25 *}$
+
+\end{minipage}
 
 
 \subsection{neg}
+\begin{minipage}{\textwidth}
 
-$\texttt{neg R} \Rightarrow \texttt{48 F7 D(x+8)}$
+$\texttt{neg R} \Rightarrow \texttt{F7 D(x+8)}$
 
-$\texttt{neg P} \Rightarrow \texttt{48 F7 1C 25 *}$
+$\texttt{neg P} \Rightarrow \texttt{F7 1C 25 *}$
+
+\end{minipage}
 
 
 \section{Shift}
 
 \subsection{shr}
+\begin{minipage}{\textwidth}
 
-$\texttt{shr R (K=1)} \Rightarrow \texttt{48 D1 E(x+8)}$
+$\texttt{shr R 1} \Rightarrow \texttt{D1 E(x+8)}$
 
-$\texttt{shr R K} \Rightarrow \texttt{48 C1 E(x+8) nB}$
+$\texttt{shr R KB} \Rightarrow \texttt{C1 E(x+8) nb}$
 
-$\texttt{shr P (K=1)} \Rightarrow \texttt{48 D1 2C 25 *}$
+$\texttt{shr P 1} \Rightarrow \texttt{D1 2C 25 *}$
 
-$\texttt{shr P K} \Rightarrow \texttt{48 C1 2C 25 * nB}$
+$\texttt{shr P KB} \Rightarrow \texttt{C1 2C 25 * nb}$
+
+\end{minipage}
 
 
 \subsection{sar}
+\begin{minipage}{\textwidth}
 
-$\texttt{sar R (K=1)} \Rightarrow \texttt{48 D1 F(x+8)}$
+$\texttt{sar R 1} \Rightarrow \texttt{D1 F(x+8)}$
 
-$\texttt{sar R K} \Rightarrow \texttt{48 C1 F(x+8) nB}$
+$\texttt{sar R KB} \Rightarrow \texttt{C1 F(x+8) nb}$
 
-$\texttt{sar P (K=1)} \Rightarrow \texttt{48 D1 3C 25 *}$
+$\texttt{sar P 1} \Rightarrow \texttt{D1 3C 25 *}$
 
-$\texttt{sar P K} \Rightarrow \texttt{48 C1 3C 25 * nB}$
+$\texttt{sar P KB} \Rightarrow \texttt{C1 3C 25 * nb}$
+
+\end{minipage}
 
 
 \subsection{shl}
+\begin{minipage}{\textwidth}
 
-$\texttt{shl R (K=1)} \Rightarrow \texttt{48 D1 Ex}$
+$\texttt{shl R 1} \Rightarrow \texttt{D1 Ex}$
 
-$\texttt{shl R K} \Rightarrow \texttt{48 C1 Ex nB}$
+$\texttt{shl R KB} \Rightarrow \texttt{C1 Ex nb}$
 
-$\texttt{shl R (K=1)} \Rightarrow \texttt{48 D1 24 25 *}$
+$\texttt{shl R 1} \Rightarrow \texttt{D1 24 25 *}$
 
-$\texttt{shl R K} \Rightarrow \texttt{48 C1 24 25 * nB}$
+$\texttt{shl R KB} \Rightarrow \texttt{C1 24 25 * nb}$
+
+\end{minipage}
 
 
 \subsection{ror}
+\begin{minipage}{\textwidth}
 
-$\texttt{ror R (K=1)} \Rightarrow \texttt{48 D1 C(x+8)}$
+$\texttt{ror R 1} \Rightarrow \texttt{D1 C(x+8)}$
 
-$\texttt{ror R K} \Rightarrow \texttt{48 C1 C(x+8) nB}$
+$\texttt{ror R KB} \Rightarrow \texttt{C1 C(x+8) nb}$
 
-$\texttt{ror P (K=1)} \Rightarrow \texttt{48 D1 0C 25 *}$
+$\texttt{ror P 1} \Rightarrow \texttt{D1 0C 25 *}$
 
-$\texttt{ror P K} \Rightarrow \texttt{48 C1 0C 25 * nB}$
+$\texttt{ror P KB} \Rightarrow \texttt{C1 0C 25 * nb}$
+
+\end{minipage}
 
 
 \subsection{rol}
+\begin{minipage}{\textwidth}
 
-$\texttt{rol R (K=1)} \Rightarrow \texttt{48 D1 Cx}$
+$\texttt{rol R 1} \Rightarrow \texttt{D1 Cx}$
 
-$\texttt{rol R K} \Rightarrow \texttt{48 C1 Cx nB}$
+$\texttt{rol R KB} \Rightarrow \texttt{C1 Cx nb}$
 
-$\texttt{rol P (K=1)} \Rightarrow \texttt{48 D1 04 25 *}$
+$\texttt{rol P 1} \Rightarrow \texttt{D1 04 25 *}$
 
-$\texttt{rol P K} \Rightarrow \texttt{48 C1 04 25 * nB}$
+$\texttt{rol P KB} \Rightarrow \texttt{C1 04 25 * nb}$
+
+\end{minipage}
 
 
-\section{Binary Logic}
+\section{Bitwise Logic}
 
 \subsection{not}
+\begin{minipage}{\textwidth}
 
-$\texttt{not R} \Rightarrow \texttt{48 F7 Dx}$
+$\texttt{not R} \Rightarrow \texttt{F7 Dx}$
 
-$\texttt{not P} \Rightarrow \texttt{48 F7 14 25 *}$
+$\texttt{not P} \Rightarrow \texttt{F7 14 25 *}$
+
+\end{minipage}
 
 
 \subsection{or}
+\begin{minipage}{\textwidth}
 
 \subsubsection{register}
 
-$\texttt{or R R} \Rightarrow \texttt{48 09 SR}$
+$\texttt{or R R} \Rightarrow \texttt{09 sr}$
 
-$\texttt{or R (K<0x80)} \Rightarrow \texttt{48 83 C(x+8) nB}$
+$\texttt{or R KB} \Rightarrow \texttt{83 C(x+8) nb}$
 
-$\texttt{or rax K} \Rightarrow \texttt{48 0D nQ}$
+$\texttt{or rax K} \Rightarrow \texttt{0D n}$
 
-$\texttt{or R K} \Rightarrow \texttt{48 81 C(x+8) nQ}$
+$\texttt{or R K} \Rightarrow \texttt{81 C(x+8) n}$
 
-$\texttt{or R P} \Rightarrow \texttt{48 09 PR 25 *}$
+$\texttt{or R P} \Rightarrow \texttt{09 pr 25 *}$
 
 
 \subsubsection{pointer}
 
-$\texttt{or P R} \Rightarrow \texttt{48 0B PR 25 *}$
+$\texttt{or P R} \Rightarrow \texttt{0B pr 25 *}$
 
-$\texttt{or P (K<127)} \Rightarrow \texttt{48 83 0C 25 * nB}$
+$\texttt{or P KB} \Rightarrow \texttt{83 0C 25 * nb}$
 
-$\texttt{or P K} \Rightarrow \texttt{48 81 0C 25 * nQ}$
+$\texttt{or P K} \Rightarrow \texttt{81 0C 25 * n}$
+
+\end{minipage}
 
 
 \subsection{xor}
+\begin{minipage}{\textwidth}
 
-$\texttt{xor R R} \Rightarrow \texttt{48 31 SR}$
+\subsubsection{register}
 
-$\texttt{xor R P} \Rightarrow \texttt{}$
+$\texttt{xor R R} \Rightarrow \texttt{31 sr}$
+
+$\texttt{xor R KB} \Rightarrow \texttt{83 Fx nb}$
+
+$\texttt{xor rax K} \Rightarrow \texttt{35 n}$
+
+$\texttt{xor R K} \Rightarrow \texttt{81 Fx n}$
+
+$\texttt{xor R P} \Rightarrow \texttt{33 pr 25 *}$
+
+
+\subsubsection{pointer}
+
+$\texttt{xor P R} \Rightarrow \texttt{31 pr 25 *}$
+
+$\texttt{xor P KB} \Rightarrow \texttt{83 34 25 * nb}$
+
+$\texttt{xor P K} \Rightarrow \texttt{81 34 25 * n}$
+
+\end{minipage}
 
 
 \subsection{and}
+\begin{minipage}{\textwidth}
 
-$\texttt{and R R} \Rightarrow \texttt{48 21 SR}$
+\subsubsection{register}
+
+$\texttt{and R R} \Rightarrow \texttt{21 sr}$
+
+$\texttt{and R KB} \Rightarrow \texttt{83 Ex nb}$
+
+$\texttt{and rax K} \Rightarrow \texttt{25 n}$
+
+$\texttt{and R K} \Rightarrow \texttt{81 Ex n}$
+
+$\texttt{and R P} \Rightarrow \texttt{23 pr *}$
+
+\subsubsection{pointer}
+
+$\texttt{and P R} \Rightarrow \texttt{21 pr 25 *}$
+
+$\texttt{and P KB} \Rightarrow \texttt{83 24 25 * nb}$
+
+$\texttt{and P K} \Rightarrow \texttt{81 24 25 * n}$
+
+\end{minipage}
+
+
+\subsection{test}
+\begin{minipage}{\textwidth}
+
+\subsubsection{register}
+
+$\texttt{test R R} \Rightarrow \texttt{85 sr}$
+
+$\texttt{test rax K} \Rightarrow \texttt{A9 n}$
+
+$\texttt{test R K} \Rightarrow \texttt{F7 Cx n}$
+
+$\texttt{test R P} \Rightarrow \texttt{85 pr 25 *}$
+
+\subsubsection{pointer}
+
+$\texttt{test P R} \Rightarrow \texttt{85 pr 25 *}$
+
+$\texttt{test P K} \Rightarrow \texttt{F7 04 25 * n}$
+
+\end{minipage}
+
+
+\section{jmp}
+
+\subsection{byte-length}
+\begin{minipage}{\textwidth}
+
+$\texttt{jns KB} \Rightarrow \texttt{79 nb}$
+
+$\texttt{jnz KB} \Rightarrow \texttt{75 nb}$
+
+$\texttt{jmp KB} \Rightarrow \texttt{EB nb}$
+
+\end{minipage}
 
 
 \section{Miscellaneous}
+\begin{minipage}{\textwidth}
+
+    Always 32-bits (dword) (meaning no size code).
 
 $\texttt{nop} \Rightarrow \texttt{90}$
 
 $\texttt{syscall} \Rightarrow \texttt{0F 05}$
+
+\end{minipage}
 
 \end{document}
