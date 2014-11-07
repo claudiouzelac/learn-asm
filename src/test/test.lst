@@ -1,9 +1,12 @@
      1                                 %line 1+1 test.s
      2                                 [section .data]
      3 00000000 0A00000000000000       a dq 10
-     4                                 
-     5                                 [section .text]
-     6                                 [global _start]
-     7                                 _start:
-     8 00000000 48F7F8                  idiv rax, rax
-     9 00000003 48F7FB                  idiv rax, rbx
+     4 00000008 0A00000000000000       b dq 10
+     5                                 
+     6                                 [section .text]
+     7                                 [global _start]
+     8                                 _start:
+     9 00000000 48C70425[00000000]-     mov qword [a], 1
+    10 00000000 01000000           
+    11 0000000C 48C7C001000000          mov rax, 1
+    12 00000013 48C7C301000000          mov rbx, 1

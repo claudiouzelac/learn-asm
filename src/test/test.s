@@ -1,8 +1,10 @@
 section .data
 a dq 10
+b dq 10
 
 section .text
 global _start
 _start:
-    idiv rax, rax
-    idiv rax, rbx
+    mov qword [a], 1
+    mov rax, 1
+    mov rbx, 1

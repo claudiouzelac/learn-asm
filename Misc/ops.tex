@@ -3,118 +3,17 @@
 \setlength{\parindent}{0pt}
 \begin{document}
 
-\section*{Opcodes}
+\section*{Info}
 
-x means source register number, DD means look at the source register codes. n
-means constant number (B for 8-bit, W for 16-bit, D for 32-bit, Q for 64-bit).
+x means destination register, SR means source register in a register--register
+operand, PR means register in a register--pointer operand. n means constant
+number (nB for 8-bit, nW for 16-bit, nD for 32-bit, nQ for 64-bit). * means
+pointer.
 
-For arguments to ops, R means destination register, S means source register, K
+For arguments, R means register, K
 means constant, P means memory address.
 
-\subsection*{mov}
-
-$\texttt{mov R S} \Rightarrow \texttt{48 89 DD}$
-
-$\texttt{mov R K} \Rightarrow \texttt{48 C7 Cx nQ}$
-
-
-\subsection*{arithmetic}
-
-\subsubsection*{add}
-
-$\texttt{add R S} \Rightarrow \texttt{48 01 DD}$
-
-$\texttt{add R (K < 127)} \Rightarrow \texttt{48 83 Cx nB}$
-
-$\texttt{add rax K} \Rightarrow \texttt{48 05 nQ}$
-
-$\texttt{add R K} \Rightarrow \texttt{48 81 Cx nQ}$
-
-
-\subsubsection*{sub}
-
-$\texttt{sub R S} \Rightarrow \texttt{48 29 DD}$
-
-$\texttt{sub R (K < 127)} \Rightarrow \texttt{48 83 C(x+8) nB}$
-
-$\texttt{sub rax K} \Rightarrow \texttt{48 2D nQ}$
-
-$\texttt{sub R K} \Rightarrow \texttt{48 81 E(x+8) nQ}$
-
-
-\subsubsection*{mul}
-
-$\texttt{mul R} \Rightarrow \texttt{48 F7 Ex}$
-
-$\texttt{mul P} \Rightarrow \texttt{48 F7 24 25 *}$
-
-
-\subsubsection*{imul}
-
-$\texttt{imul R} \Rightarrow \texttt{48 F7 E(x+8)}$
-
-$\texttt{imul P} \Rightarrow \texttt{48 F7 2C 25 *}$
-
-$\texttt{imul R S} \Rightarrow \texttt{48 0F AF DD}$
-
-
-\subsubsection*{div}
-
-$\texttt{div R} \Rightarrow \texttt{48 F7 Fx}$
-
-$\texttt{div P} \Rightarrow \texttt{48 F7 34 25 *}$
-
-
-\subsubsection*{idiv}
-
-$\texttt{idiv R} \Rightarrow \texttt{48 F7 F(x+8)}$
-
-$\texttt{idiv P} \Rightarrow \texttt{48 F7 3C 25 *}$
-
-
-\subsection*{shift}
-
-$\texttt{shr[1] R} \Rightarrow \texttt{48 D1 E(x+8)}$
-
-$\texttt{shr[n] R K} \Rightarrow \texttt{48 C1 E(x+8) nB}$
-
-$\texttt{sar[1] R} \Rightarrow \texttt{48 D1 F(x+8)}$
-
-$\texttt{sar[n] R K} \Rightarrow \texttt{48 C1 F(x+8) nB}$
-
-$\texttt{shl[1] R} \Rightarrow \texttt{48 D1 Ex}$
-
-$\texttt{shl[n] R K} \Rightarrow \texttt{48 C1 Ex nB}$
-
-
-\subsection*{rotate}
-
-$\texttt{ror[1] R} \Rightarrow \texttt{48 D1 C(x+8)}$
-
-$\texttt{ror[n] R K} \Rightarrow \texttt{48 C1 C(x+8) nB}$
-
-$\texttt{rol[1] R} \Rightarrow \texttt{48 D1 Cx}$
-
-$\texttt{rol[n] R K} \Rightarrow \texttt{48 C1 Cx nB}$
-
-
-\subsection*{bitwise logic}
-
-$\texttt{not R} \Rightarrow \texttt{48 F7 Dx}$
-
-$\texttt{or R S} \Rightarrow \texttt{48 09 ...}$
-
-$\texttt{xor R S} \Rightarrow \texttt{48 31 ...}$
-
-$\texttt{and R S} \Rightarrow \texttt{48 21 ...}$
-
-
-\subsection*{miscellaneous}
-
-$\texttt{nop} \Rightarrow \texttt{90}$
-
-
-\section*{Destination Registers}
+\section*{Destination Registers (x)}
 \begin{minipage}{\textwidth}
 
 $\texttt{rax} \Rightarrow \texttt{0}$
@@ -126,13 +25,12 @@ $\texttt{rcx} \Rightarrow \texttt{1}$
 $\texttt{rdx} \Rightarrow \texttt{2}$
 
 $\texttt{rdi} \Rightarrow \texttt{7}$
+
 \end{minipage}
 
 
-\section*{Source Registers}
+\section*{Source Registers (SR)}
 \begin{minipage}{\textwidth}
-
-x means source register number
 
 $\texttt{R rax} \Rightarrow \texttt{Cx}$
 
@@ -146,5 +44,225 @@ $\texttt{R rdi} \Rightarrow \texttt{F(x+8)}$
 
 \end{minipage}
 
+
+\section*{Register in a Register--Pointer Op (PR)}
+\begin{minipage}{\textwidth}
+
+$\texttt{rax} \rightarrow \texttt{04}$
+
+$\texttt{rbx} \rightarrow \texttt{1C}$
+
+$\texttt{rcx} \rightarrow \texttt{0C}$
+
+$\texttt{rdx} \rightarrow \texttt{14}$
+
+$\texttt{rdi} \rightarrow \texttt{3C}$
+
+\end{minipage}
+
+
+
+\section{mov}
+
+\subsection{register}
+
+$\texttt{mov R K} \Rightarrow \texttt{48 C7 Cx nQ}$
+
+$\texttt{mov R R} \Rightarrow \texttt{48 89 SR}$
+
+$\texttt{mov R P} \Rightarrow \texttt{48 8B PR 25 *}$
+
+
+\subsection{pointer}
+
+$\texttt{mov P R} \Rightarrow \texttt{48 89 PR 25 *}$
+
+$\texttt{mov P K} \Rightarrow \texttt{48 C7 04 25 * nQ}$
+
+
+\section{arithmetic}
+
+\subsection{add}
+
+\subsubsection{register}
+
+$\texttt{add R R} \Rightarrow \texttt{48 01 SR}$
+
+$\texttt{add R (K<0x80)} \Rightarrow \texttt{48 83 Cx nB}$
+
+$\texttt{add rax K} \Rightarrow \texttt{48 05 nQ}$
+
+$\texttt{add R K} \Rightarrow \texttt{48 81 Cx nQ}$
+
+$\texttt{add R P} \Rightarrow \texttt{48 01 PR 25 *}$
+
+
+\subsubsection{pointer}
+
+$\texttt{add P R} \Rightarrow \texttt{48 03 PR 25 *}$
+
+
+\subsection{sub}
+
+$\texttt{sub R S} \Rightarrow \texttt{48 29 SR}$
+
+$\texttt{sub R (K < 127)} \Rightarrow \texttt{48 83 C(x+8) nB}$
+
+$\texttt{sub rax K} \Rightarrow \texttt{48 2D nQ}$
+
+$\texttt{sub R K} \Rightarrow \texttt{48 81 E(x+8) nQ}$
+
+$\texttt{sub R P} \Rightarrow \texttt{48 29 PR 25 *}$
+
+
+\subsubsection{pointer}
+
+$\texttt{sub P R} \Rightarrow \texttt{48 2B PR 25 *}$
+
+
+\subsection{mul}
+
+$\texttt{mul R} \Rightarrow \texttt{48 F7 Ex}$
+
+$\texttt{mul P} \Rightarrow \texttt{48 F7 24 25 *}$
+
+
+\subsection{imul}
+
+$\texttt{imul R} \Rightarrow \texttt{48 F7 E(x+8)}$
+
+$\texttt{imul P} \Rightarrow \texttt{48 F7 2C 25 *}$
+
+$\texttt{imul R R} \Rightarrow \texttt{48 0F AF SR}$
+
+
+\subsection{div}
+
+$\texttt{div R} \Rightarrow \texttt{48 F7 Fx}$
+
+$\texttt{div P} \Rightarrow \texttt{48 F7 34 25 *}$
+
+
+\subsection{idiv}
+
+$\texttt{idiv R} \Rightarrow \texttt{48 F7 F(x+8)}$
+
+$\texttt{idiv P} \Rightarrow \texttt{48 F7 3C 25 *}$
+
+
+\subsection{neg}
+
+$\texttt{neg R} \Rightarrow \texttt{48 F7 D(x+8)}$
+
+$\texttt{neg P} \Rightarrow \texttt{48 F7 1C 25 *}$
+
+
+\section{Shift}
+
+\subsection{shr}
+
+$\texttt{shr R (K=1)} \Rightarrow \texttt{48 D1 E(x+8)}$
+
+$\texttt{shr R K} \Rightarrow \texttt{48 C1 E(x+8) nB}$
+
+$\texttt{shr P (K=1)} \Rightarrow \texttt{48 D1 2C 25 *}$
+
+$\texttt{shr P K} \Rightarrow \texttt{48 C1 2C 25 * nB}$
+
+
+\subsection{sar}
+
+$\texttt{sar R (K=1)} \Rightarrow \texttt{48 D1 F(x+8)}$
+
+$\texttt{sar R K} \Rightarrow \texttt{48 C1 F(x+8) nB}$
+
+$\texttt{sar P (K=1)} \Rightarrow \texttt{48 D1 3C 25 *}$
+
+$\texttt{sar P K} \Rightarrow \texttt{48 C1 3C 25 * nB}$
+
+
+\subsection{shl}
+
+$\texttt{shl R (K=1)} \Rightarrow \texttt{48 D1 Ex}$
+
+$\texttt{shl R K} \Rightarrow \texttt{48 C1 Ex nB}$
+
+$\texttt{shl R (K=1)} \Rightarrow \texttt{48 D1 24 25 *}$
+
+$\texttt{shl R K} \Rightarrow \texttt{48 C1 24 25 * nB}$
+
+
+\subsection{ror}
+
+$\texttt{ror R (K=1)} \Rightarrow \texttt{48 D1 C(x+8)}$
+
+$\texttt{ror R K} \Rightarrow \texttt{48 C1 C(x+8) nB}$
+
+$\texttt{ror P (K=1)} \Rightarrow \texttt{48 D1 0C 25 *}$
+
+$\texttt{ror P K} \Rightarrow \texttt{48 C1 0C 25 * nB}$
+
+
+\subsection{rol}
+
+$\texttt{rol R (K=1)} \Rightarrow \texttt{48 D1 Cx}$
+
+$\texttt{rol R K} \Rightarrow \texttt{48 C1 Cx nB}$
+
+$\texttt{rol P (K=1)} \Rightarrow \texttt{48 D1 04 25 *}$
+
+$\texttt{rol P K} \Rightarrow \texttt{48 C1 04 25 * nB}$
+
+
+\section{Binary Logic}
+
+\subsection{not}
+
+$\texttt{not R} \Rightarrow \texttt{48 F7 Dx}$
+
+$\texttt{not P} \Rightarrow \texttt{48 F7 14 25 *}$
+
+
+\subsection{or}
+
+\subsubsection{register}
+
+$\texttt{or R R} \Rightarrow \texttt{48 09 SR}$
+
+$\texttt{or R (K<0x80)} \Rightarrow \texttt{48 83 C(x+8) nB}$
+
+$\texttt{or rax K} \Rightarrow \texttt{48 0D nQ}$
+
+$\texttt{or R K} \Rightarrow \texttt{48 81 C(x+8) nQ}$
+
+$\texttt{or R P} \Rightarrow \texttt{48 09 PR 25 *}$
+
+
+\subsubsection{pointer}
+
+$\texttt{or P R} \Rightarrow \texttt{48 0B PR 25 *}$
+
+$\texttt{or P (K<127)} \Rightarrow \texttt{48 83 0C 25 * nB}$
+
+$\texttt{or P K} \Rightarrow \texttt{48 81 0C 25 * nQ}$
+
+
+\subsection{xor}
+
+$\texttt{xor R R} \Rightarrow \texttt{48 31 SR}$
+
+$\texttt{xor R P} \Rightarrow \texttt{}$
+
+
+\subsection{and}
+
+$\texttt{and R R} \Rightarrow \texttt{48 21 SR}$
+
+
+\section{Miscellaneous}
+
+$\texttt{nop} \Rightarrow \texttt{90}$
+
+$\texttt{syscall} \Rightarrow \texttt{0F 05}$
 
 \end{document}
