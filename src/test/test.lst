@@ -1,13 +1,16 @@
      1                                 %line 1+1 test.s
      2                                 [section .data]
-     3 00000000 0A00000000000000       a dq 10
-     4 00000008 0A00000000000000       b dq 10
-     5                                 
-     6                                 [section .text]
-     7                                 [global _start]
-     8                                 _start:
-     9 00000000 480F44C0                cmovz rax, rax
-    10 00000004 480F48C0                cmovs rax, rax
-    11                                 
-    12 00000008 480F44DB                cmovz rbx, rbx
-    13 0000000C 480F48DB                cmovs rbx, rbx
+     3 00000000 0400000000000000       a dq 4
+     4                                 
+     5                                 [section .text]
+     6                                 [global _start]
+     7                                 _start:
+     8 00000000 4C89C0                  mov rax, r8
+     9 00000003 4989C0                  mov r8, rax
+    10                                 
+    11 00000006 4C89C8                  mov rax, r9
+    12 00000009 4989C1                  mov r9, rax
+    13                                 
+    14 0000000C 4C890425[00000000]      mov [a], r8
+    15 00000014 4C890C25[00000000]      mov [a], r9
+    16 0000001C 48890425[00000000]      mov [a], rax

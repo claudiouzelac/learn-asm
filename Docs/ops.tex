@@ -13,16 +13,28 @@ For arguments, R means register, Rax means any ax register (ax, eax, rax),
 K means a constant of any size, KB means a constant where $0 \leq K \leq 127$,
 P means memory address.
 
+Note: There is no discussion of the new x64 r(8-15) registers. This is because
+they are difficult, and don't hold with past conventions.
+
+Note 2: This will never be updated. This is as far as I got before I realized
+that this language was way too complicated for me to ever finish. Sorry...
+
 \section*{Destination Registers (x)}
 \begin{minipage}{\textwidth}
 
 $\texttt{ax} \rightarrow \texttt{0}$
 
-$\texttt{bx} \rightarrow \texttt{3}$
-
 $\texttt{cx} \rightarrow \texttt{1}$
 
 $\texttt{dx} \rightarrow \texttt{2}$
+
+$\texttt{bx} \rightarrow \texttt{3}$
+
+$\texttt{sp} \rightarrow \texttt{4}$
+
+$\texttt{bp} \rightarrow \texttt{5}$
+
+$\texttt{si} \rightarrow \texttt{6}$
 
 $\texttt{di} \rightarrow \texttt{7}$
 
@@ -34,11 +46,17 @@ $\texttt{di} \rightarrow \texttt{7}$
 
 $\texttt{ax} \rightarrow \texttt{Cx}$
 
-$\texttt{bx} \rightarrow \texttt{D(x+8)}$
-
 $\texttt{cx} \rightarrow \texttt{C(x+8)}$
 
 $\texttt{dx} \rightarrow \texttt{Dx}$
+
+$\texttt{bx} \rightarrow \texttt{D(x+8)}$
+
+$\texttt{sp} \rightarrow \texttt{Ex}$
+
+$\texttt{bp} \rightarrow \texttt{E(x+8)}$
+
+$\texttt{si} \rightarrow \texttt{Fx}$
 
 $\texttt{di} \rightarrow \texttt{F(x+8)}$
 
@@ -50,11 +68,17 @@ $\texttt{di} \rightarrow \texttt{F(x+8)}$
 
 $\texttt{ax} \rightarrow \texttt{04}$
 
-$\texttt{bx} \rightarrow \texttt{1C}$
-
 $\texttt{cx} \rightarrow \texttt{0C}$
 
 $\texttt{dx} \rightarrow \texttt{14}$
+
+$\texttt{bx} \rightarrow \texttt{1C}$
+
+$\texttt{sp} \rightarrow \texttt{24}$
+
+$\texttt{bp} \rightarrow \texttt{2C}$
+
+$\texttt{si} \rightarrow \texttt{34}$
 
 $\texttt{di} \rightarrow \texttt{3C}$
 
@@ -133,6 +157,32 @@ $\texttt{cmovs R R} \Rightarrow \texttt{0F 48 sr}$
 
 \end{minipage}
 
+
+
+\section{push/pop}
+
+\subsection{push}
+
+Note: In the case of registers and pointers, push cannot push bytes, nor dwords.
+It must push either a qword or a word.
+It does not require a size, in the case of qwords, but does in the case of a
+word.
+
+$\texttt{push R} \Rightarrow \texttt{5x}$
+
+$\texttt{push P} \Rightarrow \texttt{FF 34 25 *}$
+
+$\texttt{push KB} \Rightarrow \texttt{6A nb}$
+
+$\texttt{push K} \Rightarrow \texttt{68 n}$
+
+\subsection{pop}
+
+Same restrictions apply as in push.
+
+$\texttt{pop R} \Rightarrow \texttt{5(x+8)}$
+
+$\texttt{pop P} \Rightarrow \texttt{8F 04 25 *}$
 
 
 \section{arithmetic}
@@ -434,11 +484,26 @@ $\texttt{test P K} \Rightarrow \texttt{F7 04 25 * n}$
 \subsection{byte-length}
 \begin{minipage}{\textwidth}
 
+$\texttt{jz/je KB} \Rightarrow \texttt{74 nb}$
+
+$\texttt{jnz/jne KB} \Rightarrow \texttt{75 nb}$
+
 $\texttt{jns KB} \Rightarrow \texttt{79 nb}$
 
-$\texttt{jnz KB} \Rightarrow \texttt{75 nb}$
+$\texttt{jge KB} \Rightarrow \texttt{7D nb}$
+
+$\texttt{jle KB} \Rightarrow \texttt{7E nb}$
 
 $\texttt{jmp KB} \Rightarrow \texttt{EB nb}$
+
+\end{minipage}
+
+\subsection{qword-length}
+\begin{minipage}{\textwidth}
+
+$\texttt{jz/je K} \Rightarrow \texttt{0F K}$
+
+$\texttt{jmp K} \Rightarrow \texttt{E9 K}$
 
 \end{minipage}
 
@@ -449,6 +514,8 @@ $\texttt{jmp KB} \Rightarrow \texttt{EB nb}$
     Always 32-bits (dword) (meaning no size code).
 
 $\texttt{nop} \Rightarrow \texttt{90}$
+
+$\texttt{ret} \Rightarrow \texttt{C3}$
 
 $\texttt{syscall} \Rightarrow \texttt{0F 05}$
 
